@@ -47,13 +47,16 @@ for i = 1:m
     Y(i,:) = I(y(i),:);
 end
 
-a1 = [ones(m,1), X];
+a1 = [ones(m,1) X];
 a2 = sigmoid(a1 * Theta1');
 
-a2 = [ones(size(a2,1) ,1), a2];
+new_m  = size(a2,1);
+a2 = [ones(new_m,1) a2];
 a3 = sigmoid(a2 * Theta2');
 
-J = (-1/m) * sum((Y.*log(a3) + (1-Y).*log(1-a3)), 2);
+reg = lambda/(2*m) * (sum(sumsqr(Theta1(:, 2:end))) + sum(sumsqr(Theta2(:,2:end))));
+
+J = 1 / m * sum(sum((-Y .* log(a3) - (1 - Y) .* log(1 - a3)))) + reg;
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
